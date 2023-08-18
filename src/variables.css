@@ -1,0 +1,8 @@
+:root {
+  --color-1: #272829;
+  --color-2: #61677a;
+  --color-3: #d8d9da;
+  --color-4: #fff6e0;
+
+  --transition: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
