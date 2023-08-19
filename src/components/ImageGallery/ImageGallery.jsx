@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import { toast } from 'react-toastify';
 import { Loader } from '../Loader/Loader';
 import { Gallery } from './ImageGallery.styled';
@@ -14,7 +15,7 @@ export class ImageGallery extends Component {
     loading: false,
     loadingMore: false,
     error: null,
-    page: 1,
+    page: 0,
     perPage: 12,
     loadMore: false,
     selectedImage: null,
@@ -22,7 +23,7 @@ export class ImageGallery extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.searchQuery !== prevProps.searchQuery) {
-      this.setState({ loading: true, images: [], page: 1 });
+      this.setState({ loading: true, images: [], page: 0 });
       this.fetchImages();
     }
   }
@@ -32,7 +33,9 @@ export class ImageGallery extends Component {
     const { page, perPage } = this.state;
 
     fetch(
-      `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=37648737-76093e0db6038ebde4a82f299&image_type=photo&orientation=horizontal&per_page=${perPage}`
+      `https://pixabay.com/api/?q=${searchQuery}&page=${
+        page + 1
+      }&key=37648737-76093e0db6038ebde4a82f299&image_type=photo&orientation=horizontal&per_page=${perPage}`
     )
       .then(response => {
         if (response.ok) {
@@ -49,7 +52,7 @@ export class ImageGallery extends Component {
           this.setState(prevState => ({
             images: [...prevState.images, ...data.hits],
             page: prevState.page + 1,
-            loadMore: this.state.page < Math.ceil(data.totalHits / perPage),
+            loadMore: this.state.page + 1 < Math.ceil(data.totalHits / perPage),
           }));
         }
       })
@@ -105,3 +108,5 @@ export class ImageGallery extends Component {
     );
   }
 }
+
+ImageGallery.propTypes = { searchQuery: PropTypes.string.isRequired };
