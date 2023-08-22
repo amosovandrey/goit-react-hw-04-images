@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { toast } from 'react-toastify';
 import { Loader } from '../Loader/Loader';
@@ -23,13 +23,19 @@ export function ImageGallery({ query }) {
   const [images, setImages] = useState([]);
   // const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(12);
+  const [perPage] = useState(12);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [loadMore, setLoadMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    setImages([]);
+    setPage(1);
+    setError(null);
+  }, [query]);
 
   useEffect(() => {
     if (!query) {
@@ -43,6 +49,7 @@ export function ImageGallery({ query }) {
         .then(data => {
           if (data.hits.length === 0) {
             toast.warn(`Looks like there are no images about ${query}`);
+            setLoadMore(false);
           } else {
             setImages(prevImages => [...prevImages, ...data.hits]);
             setLoadMore(page < Math.ceil(data.totalHits / perPage));
@@ -73,7 +80,7 @@ export function ImageGallery({ query }) {
 
   return (
     <>
-      {error && <p>{error.message}</p>}
+      {error && toast.warn(`Oops! here is what went wrong: ${error}`)}
       {isLoading && <Loader />}
       {images.length > 0 && (
         <Gallery>

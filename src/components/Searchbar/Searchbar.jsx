@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { toast } from 'react-toastify';
 import {
@@ -12,20 +12,20 @@ import {
 import { BiSearchAlt } from 'react-icons/bi';
 
 export const Searchbar = ({ onSubmit }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [query, setQuery] = useState('');
 
   const handleSearchChange = event => {
-    setSearchQuery(event.currentTarget.value.toLowerCase());
+    setQuery(event.currentTarget.value.toLowerCase());
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
-    if (searchQuery.trim() === '') {
+    if (query.trim() === '') {
       toast.warn('Please type something in search');
     } else {
-      onSubmit(searchQuery);
-      setSearchQuery('');
+      onSubmit(query);
+      setQuery('');
     }
   };
 
@@ -42,7 +42,7 @@ export const Searchbar = ({ onSubmit }) => {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
-          value={searchQuery}
+          value={query}
           onChange={handleSearchChange}
         />
       </SearchForm>
