@@ -6,46 +6,29 @@ import { Gallery } from './ImageGallery.styled';
 import { Button } from '../Button/Button';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Modal } from 'components/Modal/Modal';
-import axios from 'axios';
+import { fetchImages } from 'services/PixabayAPI';
 
 const MIN_LOADING_TIME = 300;
-const API_KEY = '37648737-76093e0db6038ebde4a82f299';
-
-const APIfetchImages = ({ searchQuery = '', page = 1, perPage = 12 } = {}) => {
-  return axios
-    .get(
-      `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
-    )
-    .then(response => response.data);
-};
 
 export function ImageGallery({ query }) {
   const [images, setImages] = useState([]);
-  // const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [perPage] = useState(12);
-
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [loadMore, setLoadMore] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  useEffect(() => {
-    setImages([]);
-    setPage(1);
-    setError(null);
-  }, [query]);
+  const [prevQuery, setPrevQuery] = useState('');
 
   useEffect(() => {
     if (!query) {
       return;
     }
 
-    const fetchImages = () => {
+    if (query === prevQuery) {
       setIsLoading(true);
-
-      APIfetchImages({ searchQuery: query, page, perPage })
+      fetchImages(query, page)
         .then(data => {
           if (data.hits.length === 0) {
             toast.warn(`Looks like there are no images about ${query}`);
@@ -56,18 +39,28 @@ export function ImageGallery({ query }) {
           }
         })
         .catch(error => setError(error.message))
-        .finally(() => setIsLoading(false));
-    };
-
-    fetchImages();
-  }, [page, perPage, query]);
+        .finally(() =>
+          setTimeout(() => {
+            setIsLoading(false);
+            setLoadingMore(false);
+            if (page > 1) {
+              window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth',
+              });
+            }
+          }, MIN_LOADING_TIME)
+        );
+    } else {
+      setPrevQuery(query);
+      setImages([]);
+      setPage(1);
+    }
+  }, [page, perPage, prevQuery, query]);
 
   const handleLoadMore = () => {
     setLoadingMore(true);
     setPage(prevPage => prevPage + 1);
-    setTimeout(() => {
-      setLoadingMore(false);
-    }, MIN_LOADING_TIME);
   };
 
   const handleImageClick = image => {
