@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import { BiSearchAlt } from 'react-icons/bi';
 
 export const SearchbarHeader = styled.header`
   top: 0;
@@ -27,6 +28,7 @@ export const SearchForm = styled.form`
   background-color: #fff;
   border-radius: 3px;
   overflow: hidden;
+  gap: 8px;
 `;
 
 export const SearchFormButton = styled.button`
@@ -41,7 +43,7 @@ export const SearchFormButton = styled.button`
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0.6;
-  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   outline: none;
 
@@ -76,5 +78,15 @@ export const SearchFormInput = styled.input`
   &::placeholder {
     font: inherit;
     font-size: 18px;
+  }
+`;
+
+export const StyledBiSearchAlt = styled(BiSearchAlt)`
+  width: 24px;
+  height: 24px;
+  transition: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  ${SearchFormButton}:hover & {
+    transform: scale(1.2);
   }
 `;

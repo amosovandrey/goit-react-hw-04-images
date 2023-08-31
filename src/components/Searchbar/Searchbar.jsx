@@ -8,8 +8,7 @@ import {
   SearchFormButtonLabel,
   SearchFormInput,
 } from './Searchbar.styled';
-
-import { BiSearchAlt } from 'react-icons/bi';
+import { StyledBiSearchAlt } from './Searchbar.styled';
 
 export const Searchbar = ({ onSubmit }) => {
   const [query, setQuery] = useState('');
@@ -33,7 +32,7 @@ export const Searchbar = ({ onSubmit }) => {
     <SearchbarHeader>
       <SearchForm onSubmit={handleSubmit}>
         <SearchFormButton type="submit">
-          <BiSearchAlt />
+          <StyledBiSearchAlt />
           <SearchFormButtonLabel>Search</SearchFormButtonLabel>
         </SearchFormButton>
 
